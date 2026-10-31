@@ -11,10 +11,13 @@
   },
   "android": {
     "allowMixedContent": false,
-    "appendUserAgent": "CipherSealApp/1"
+    "appendUserAgent": "CipherSealApp/1",
+    "backgroundColor": "#080a12"
   },
   "ios": {
     "appendUserAgent": "CipherSealApp/1",
-    "limitsNavigationsToAppBoundDomains": false
-  }
+    "limitsNavigationsToAppBoundDomains": false,
+    "contentInset": "never"
+  },
+  "backgroundColor": "#080a12"
 }

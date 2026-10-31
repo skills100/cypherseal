@@ -26,18 +26,31 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 
-html, body {
+html {
   margin: 0; padding: 0; min-height: 100%;
+  background-color: var(--bg-0);
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+}
+body {
+  margin: 0; min-height: 100vh; min-height: 100dvh;
+  /* the notch / home-bar areas keep the same background, so the page runs edge to edge */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  overflow-x: hidden;
   background:
     radial-gradient(1100px 760px at 12% -8%, #1c2142 0%, transparent 60%),
     radial-gradient(900px 700px at 110% 6%, #26193f 0%, transparent 60%),
     var(--bg-0);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
   color: var(--text);
   font-family: var(--sans);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-body { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+img, video, canvas, svg { max-width: 100%; }
 
 .wrap { max-width: 920px; margin: 0 auto; padding: 34px 20px 70px; }
 .skip { position: absolute; left: -999px; }
@@ -59,7 +72,7 @@ body { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area
 .logo-slot.has-img { border-style: solid; background: rgba(255, 255, 255, 0.04); }
 
 .eyebrow { margin: 0; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
-h1.title { margin: 0; font-family: var(--serif); font-size: clamp(28px, 5vw, 40px); line-height: 1.1; }
+h1.title { margin: 0; font-family: var(--serif); font-size: 34px; font-size: clamp(28px, 5vw, 40px); line-height: 1.1; }
 h1.title span { color: var(--gold-bright); }
 .tagline { margin: 10px auto 0; max-width: 620px; color: var(--muted); font-size: 14.5px; }
 
@@ -69,7 +82,7 @@ h1.title span { color: var(--gold-bright); }
   cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent;
 }
 .lock-stage:focus-visible { box-shadow: 0 0 0 2px var(--gold); border-radius: 18px; }
-.lock-scene { position: absolute; inset: 0; perspective: 900px; perspective-origin: 50% 38%; }
+.lock-scene { position: absolute; top: 0; right: 0; bottom: 0; left: 0; perspective: 900px; perspective-origin: 50% 38%; }
 .lock { position: absolute; left: 150px; top: 206px; width: 0; height: 0; transform-style: preserve-3d; }
 .lock-glow {
   position: absolute; left: 50%; bottom: 40px; width: 250px; height: 50px; margin-left: -125px;
@@ -104,7 +117,7 @@ h1.title span { color: var(--gold-bright); }
 
 .shackle { left: -42px; top: -118px; width: 84px; height: 96px; transform-origin: 77px 80px; }
 .sh-layer {
-  position: absolute; inset: 0; box-sizing: border-box; border: 13px solid hsl(215 10% var(--l, 60%)); border-bottom: 0;
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0; box-sizing: border-box; border: 13px solid hsl(215 10% var(--l, 60%)); border-bottom: 0;
   border-radius: 42px 42px 0 0;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 22% 100%, 22% calc(100% - 24px), 0 calc(100% - 24px));
 }
@@ -115,7 +128,7 @@ h1.title span { color: var(--gold-bright); }
   transform: rotateY(-90deg); background: linear-gradient(#ffe58a, #b88a1c); border-radius: 2px;
 }
 .key-plane-b { transform: rotateY(-90deg) rotateX(90deg); }
-.key-teeth { position: absolute; inset: 0; }
+.key-teeth { position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
 .key-tooth { position: absolute; width: 6px; background: #d8ab2c; border-radius: 1px; }
 .key-tooth.t1 { left: 4px; top: -6px; height: 20px; }
 .key-tooth.t2 { left: 14px; top: -3px; height: 14px; }
@@ -150,7 +163,7 @@ h1.title span { color: var(--gold-bright); }
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 .tech-badge::before {
-  content: ""; position: absolute; inset: -40%; opacity: 0.2; transition: opacity 0.18s ease;
+  content: ""; position: absolute; top: -40%; right: -40%; bottom: -40%; left: -40%; opacity: 0.2; transition: opacity 0.18s ease;
   background: radial-gradient(circle at 50% 0%, var(--glow, var(--gold)) 0%, transparent 62%);
 }
 .tech-badge:hover { border-color: var(--glow); box-shadow: 0 22px 40px -16px var(--glow); }
@@ -284,7 +297,7 @@ select option { background: #121528; }
 .summary b { display: block; margin-top: 2px; color: var(--text); font: 600 12.5px var(--mono); word-break: break-all; }
 
 /* -------------------------------------------------------------- modal */
-.modal-bg { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(4, 5, 10, 0.72); backdrop-filter: blur(6px); }
+.modal-bg { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(4, 5, 10, 0.72); backdrop-filter: blur(6px); }
 .modal { width: 100%; max-width: 520px; padding: 26px; border-radius: 18px; background: #12162b; border: 1px solid var(--panel-line); box-shadow: 0 40px 80px -20px #000; }
 .modal h2 { margin: 0 0 6px; font-family: var(--serif); font-size: 21px; }
 .modal p { margin: 0 0 14px; color: var(--muted); font-size: 13.5px; }
@@ -293,8 +306,8 @@ select option { background: #121528; }
 .copystate.ok { color: var(--green); }
 
 /* ------------------------------------------------------------- viewer */
-.viewer { position: fixed; inset: 0; z-index: 80; display: flex; align-items: center; justify-content: center; padding: 14px; background: rgba(3, 4, 9, 0.92); }
-.camera-gate { position: fixed; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(3, 4, 9, 0.98); }
+.viewer { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 80; display: flex; align-items: center; justify-content: center; padding: 14px; background: rgba(3, 4, 9, 0.92); }
+.camera-gate { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(3, 4, 9, 0.98); }
 .camera-gate-card { width: 100%; max-width: 520px; padding: 24px; border-radius: 18px; background: #12162b; border: 1px solid var(--panel-line); box-shadow: 0 40px 80px -20px #000; }
 .camera-gate-card h2 { margin: 0 0 8px; font-family: var(--serif); font-size: 21px; }
 .camera-gate-card p { color: var(--muted); font-size: 13px; }
@@ -313,7 +326,7 @@ select option { background: #121528; }
 .ring svg { width: 48px; height: 48px; transform: rotate(-90deg); }
 .ring-bg { fill: none; stroke: rgba(255, 255, 255, 0.12); stroke-width: 4; }
 .ring-arc { fill: none; stroke: var(--gold-bright); stroke-width: 4; stroke-linecap: round; }
-.ring span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 700 14px var(--mono); }
+.ring span { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; align-items: center; justify-content: center; font: 700 14px var(--mono); }
 .viewer-body { padding: 16px; overflow: auto; flex: 1; min-height: 160px; }
 .viewer-foot { padding: 0 16px 8px; font-size: 12px; color: var(--muted); }
 .viewer-note { padding: 0 16px 14px; min-height: 22px; font-size: 12.5px; color: #ffd98a; }
@@ -362,3 +375,31 @@ footer .maker { color: var(--gold-bright); }
 .appgate-btn{display:inline-block;margin:8px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:600}
 .appgate-more{display:inline-block;margin-top:6px;color:#d4af37}
 .appgate-note{color:#e8d58a}
+
+
+/* ---- Old iPhone / Safari < 14.1 compatibility (no flex `gap`) ---- */
+@supports not (inset: 0) {
+  .brand > * + *        { margin-left: 14px; }
+  .guest-note > * + *   { margin-left: 10px; }
+  .chip > * + *         { margin-left: 10px; }
+  .opt-head > * + *     { margin-left: 10px; }
+  .opt-sub > * + *      { margin-left: 8px; }
+  .pwrow > * + *        { margin-left: 8px; }
+  .btn > * + *          { margin-left: 8px; }
+  .viewer-top > * + *   { margin-left: 12px; }
+  .vfile > * + *        { margin-left: 12px; }
+  .guard-chip > * + *   { margin-left: 8px; }
+  .tabs > *             { margin: 0 8px 8px 0; }
+  .actions > *          { margin: 0 10px 10px 0; }
+  .pwbox-top > *        { margin-right: 10px; margin-bottom: 6px; }
+  .viewer-badges > *    { margin: 0 6px 6px 0; }
+}
+
+/* full-screen overlays stay clear of notch and home bar */
+.modal-bg, .viewer, .camera-gate {
+  padding-top: max(14px, env(safe-area-inset-top, 0px));
+  padding-right: max(14px, env(safe-area-inset-right, 0px));
+  padding-bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(14px, env(safe-area-inset-left, 0px));
+}
+@media (max-width: 380px) { .wrap { padding-left: 14px; padding-right: 14px; } }

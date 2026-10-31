@@ -1,0 +1,7 @@
+# CipherSeal Vault — robots.txt
+# Replace the domain with your real deployed URL once hosted.
+User-agent: *
+Allow: /
+Disallow: /tests/
+
+Sitemap: https://cipherseal-swu.vercel.app/sitemap.xml

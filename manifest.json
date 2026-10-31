@@ -1,0 +1,10 @@
+{
+  "name": "CipherSeal Vault — Zero-Trust Encryption Vault",
+  "short_name": "CipherSeal",
+  "description": "Free no-login AES-256-GCM vault for files and messages. Runs entirely in your browser.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080a12",
+  "theme_color": "#080a12",
+  "icons": [{ "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Replace https://cipherseal-swu.vercel.app everywhere (canonical, og:url,
+     og:image, JSON-LD, robots.txt, sitemap.xml) with your real domain once hosted. -->
+<title>CipherSeal Vault | Free Zero-Trust AES-256-GCM Encryption Vault for Files &amp; Messages</title>
+<meta name="description" content="CipherSeal Vault is a free, no-login, zero-trust encryption vault. Seal messages and files with AES-256-GCM and dynamic PBKDF2 key derivation, with self-destruct timers, view-once and protected view. Everything runs in your browser.">
+<meta name="keywords" content="AES-256-GCM, zero trust file vault, encrypt files online, PBKDF2 dynamic key derivation, self-destructing message, view once file, academic records protection, CipherSeal Vault, client-side encryption">
+<meta name="author" content="Lukman Agbolade Alao">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#080a12">
+<link rel="canonical" href="https://cipherseal-swu.vercel.app/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CipherSeal Vault">
+<meta property="og:title" content="CipherSeal Vault — Zero-Trust AES-256-GCM Encryption Vault">
+<meta property="og:description" content="No login. No upload. Encrypt files and messages in your browser with AES-256-GCM, self-destruct timers and view-once.">
+<meta property="og:url" content="https://cipherseal-swu.vercel.app/">
+<meta property="og:image" content="https://cipherseal-swu.vercel.app/assets/img/padlock.gif">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CipherSeal Vault — Zero-Trust AES-256-GCM Encryption Vault">
+<meta name="twitter:description" content="No login. No upload. Encrypt files and messages in your browser with AES-256-GCM.">
+<meta name="twitter:image" content="https://cipherseal-swu.vercel.app/assets/img/padlock.gif">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CipherSeal Vault",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Any (runs in a web browser)",
+  "url": "https://cipherseal-swu.vercel.app/",
+  "description": "A free, no-login, client-side zero-trust vault that seals messages and files with AES-256-GCM and dynamic PBKDF2 key derivation, with self-destruct, view-once and protected view.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Lukman Agbolade Alao" },
+  "featureList": [
+    "AES-256-GCM authenticated encryption",
+    "Dynamic PBKDF2-HMAC-SHA-256 key derivation",
+    "Auto-generated strong passwords",
+    "Self-destruct timer and view-once",
+    "Protected view against copying and screenshots",
+    "Wrong-password warnings and lockout",
+    "Optional RSA-OAEP owner recovery",
+    "No login, no upload, no server"
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the vault</a>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="brand">
+      <div class="logo-slot" id="logoSlot" title="Logo placeholder: add your logo as assets/img/logo.png">CS</div>
+      <div>
+        <p class="eyebrow">Zero-Trust Secure File Vault</p>
+        <h1 class="title">CipherSeal <span>Vault</span></h1>
+      </div>
+    </div>
+
+    <div class="lock-stage" id="lockStage" role="img" tabindex="0"
+         aria-label="Animated 3D padlock: a key is inserted and turned, the shackle opens, then it locks again. Click to pause or resume.">
+      <noscript><img class="lock-fallback" src="assets/img/padlock.gif" alt="Animated padlock opening and closing with a key"></noscript>
+    </div>
+
+    <p class="tagline">Encrypt messages and files with AES-256-GCM, right here in your browser. No account, no upload, no server — only the people holding the password can decrypt what you encrypt.</p>
+  </header>
+
+  <section class="tech-badges" aria-label="Technologies used">
+    <div class="tech-badge aes"><div class="ic">AES</div><div class="nm">AES-256</div><div class="ds">256-bit symmetric cipher</div></div>
+    <div class="tech-badge gcm"><div class="ic">GCM</div><div class="nm">GCM mode</div><div class="ds">Authenticated encryption, tamper detection</div></div>
+    <div class="tech-badge kdf"><div class="ic">KDF</div><div class="nm">PBKDF2</div><div class="ds">Dynamic iteration count per record</div></div>
+    <div class="tech-badge sha"><div class="ic">256</div><div class="nm">SHA-256</div><div class="ds">Integrity digest and key hash</div></div>
+    <div class="tech-badge zt"><div class="ic">ZT</div><div class="nm">Zero-Trust</div><div class="ds">Verify every open, trust nothing</div></div>
+  </section>
+
+  <main id="main">
+    <noscript><p class="msg err show">CipherSeal Vault needs JavaScript to run encryption in your browser. Please enable it.</p></noscript>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="encrypt" role="tab">Encrypt</button>
+      <button class="tab" data-tab="decrypt" role="tab">Decrypt</button>
+      <button class="tab" data-tab="recover" role="tab">Recover (Owner)</button>
+    </div>
+
+    <!-- ============================== ENCRYPT ============================== -->
+    <section class="panel active" id="view-encrypt">
+      <div class="guest-note"><span>&#128737;</span><span><strong>Guest mode.</strong> No sign-up. Your message, file and password never leave this page. Only view-once and self-destruct items contact a tiny release service, and it only ever receives a random key share and a password <em>proof</em>, never your password or content.</span></div>
+
+      <label class="field-label" for="encryptMessage">Message (optional)</label>
+      <textarea id="encryptMessage" placeholder="Type a message to encrypt…"></textarea>
+
+      <label class="field-label">Attach a file (optional)</label>
+      <div class="dropzone" id="encryptDrop"><strong>Drop a file here, or click to choose</strong>Any file type. It stays on your device.</div>
+      <input type="file" id="encryptFile" hidden>
+      <div class="chip" id="encryptChip" hidden><span class="nm" id="encryptChipName"></span><button type="button" id="encryptChipClear">remove</button></div>
+
+      <label class="field-label" for="encryptSensitivity">Record sensitivity (sets the dynamic PBKDF2 work factor)</label>
+      <select id="encryptSensitivity">
+        <option value="public">Public — course handout, syllabus</option>
+        <option value="internal" selected>Internal — draft coursework, notes</option>
+        <option value="confidential">Confidential — result sheet, grade report</option>
+        <option value="restricted">Restricted — official transcript, exam script</option>
+      </select>
+      <span class="pill" id="iterPreview">calculating key strength…</span>
+
+      <label class="field-label">Protection mode</label>
+      <p class="opt-note" id="modeHelp">Pick <strong>one</strong> mode. Each mode is encrypted on its own, with its own key, so a protected file, a view-once file and a self-destruct file never share key material. Tick “Combine modes” only if you want several at once.</p>
+      <div class="opt"><label class="opt-head"><input type="checkbox" id="optCombine"> Combine modes (encrypt them together)</label></div>
+      <div class="options">
+        <div class="opt">
+          <label class="opt-head"><input type="checkbox" id="optProtected"> Protected view</label>
+          <p class="opt-note">Camera-guarded viewing. No copy, save, print or screenshots. Works offline. Supports text, Word (.docx), PDF and images.</p>
+        </div>
+        <div class="opt">
+          <label class="opt-head"><input type="checkbox" id="optOnce"> View once</label>
+          <p class="opt-note">Opens one time in the whole world: a copy on another device cannot be opened again, even with the right password. Camera-guarded. Needs internet.</p>
+        </div>
+        <div class="opt">
+          <label class="opt-head"><input type="checkbox" id="optTimer"> Self-destruct after opening</label>
+          <p class="opt-note">Opens one time too, then wipes itself after the seconds you set. Camera-guarded. Needs internet.</p>
+          <div class="opt-sub" id="timerSub" hidden><label for="optSeconds">Seconds</label><input type="number" id="optSeconds" min="3" max="86400" value="30"></div>
+        </div>
+        <div class="opt">
+          <label class="opt-head"><input type="checkbox" id="optRecovery"> Allow owner recovery</label>
+          <p class="opt-note" id="recoveryNote">The password is wrapped with the project owner's public key. Only the owner's private key can unwrap it.</p>
+        </div>
+      </div>
+
+      <p class="opt-note" id="appNote">Protected, view-once and self-destruct items open only inside the CipherSeal app (Android now, iPhone by cable install), which makes screenshots and screen recordings come out blank. Standard encryption opens in any browser.</p>
+
+      <div id="expiryRow" hidden>
+        <label class="field-label" for="optExpiry">Item expires</label>
+        <select id="optExpiry">
+          <option value="3600">After 1 hour</option>
+          <option value="86400">After 24 hours</option>
+          <option value="604800" selected>After 7 days</option>
+          <option value="2592000">After 30 days</option>
+          <option value="31536000">After 1 year</option>
+        </select>
+        <p class="opt-note">View-once and self-destruct items: if nobody opened it by then. Protected items: their total lifetime. Afterwards the release service deletes the key for good, so the file can never be opened by anyone, even with the right password.</p>
+      </div>
+
+      <label class="field-label">Password</label>
+      <div class="pwbox">
+        <div class="pwbox-top">
+          <span class="pwbox-title" id="pwTitle">Auto-generated very strong password</span>
+          <button type="button" class="linkbtn" id="pwModeBtn">Use my own password instead</button>
+        </div>
+        <div class="pwrow">
+          <input type="password" id="pwField" class="mono" readonly autocomplete="off" spellcheck="false" aria-label="Encryption password">
+          <button type="button" class="mini" id="pwShow">SHOW</button>
+          <button type="button" class="mini" id="pwCopy">COPY</button>
+          <button type="button" class="mini" id="pwNew">NEW</button>
+        </div>
+        <div class="meter"><i id="pwMeter"></i></div>
+        <div class="meter-text" id="pwMeterText"></div>
+      </div>
+
+      <div class="actions"><button type="button" class="btn btn-gold" id="encryptBtn">Encrypt it</button></div>
+      <div class="msg err" id="encryptErr"></div>
+      <div class="msg warn" id="encryptWarn"></div>
+
+      <div class="output" id="encryptOut" hidden>
+        <div class="msg ok show" id="encryptOk">Encrypted. Send the encrypted item and the password to your recipient through different channels.</div>
+        <div class="summary" id="encryptSummary"></div>
+        <div id="encryptTextBlock">
+          <div class="outhead"><label class="field-label" for="encryptedText">Encrypted text</label><button type="button" class="mini" id="encryptCopy">COPY</button></div>
+          <textarea id="encryptedText" class="mono" readonly></textarea>
+        </div>
+        <div class="actions"><button type="button" class="btn btn-ghost" id="encryptDownload">Download encrypted file (.cenc)</button></div>
+      </div>
+    </section>
+
+    <!-- ============================== DECRYPT ============================== -->
+    <section class="panel" id="view-decrypt">
+      <p class="helper">Paste the encrypted text or choose the encrypted file you received, then enter the password.</p>
+      <label class="field-label" for="decryptText">Paste encrypted text</label>
+      <textarea id="decryptText" class="mono" placeholder="Paste the encrypted text you received…"></textarea>
+      <div class="or">— OR —</div>
+      <label class="field-label">Choose an encrypted (.cenc) file</label>
+      <div class="dropzone" id="decryptDrop"><strong>Drop the encrypted file here, or click to choose</strong>The .cenc file your sender gave you.</div>
+      <input type="file" id="decryptFile" hidden>
+      <div class="chip" id="decryptChip" hidden><span class="nm" id="decryptChipName"></span><button type="button" id="decryptChipClear">remove</button></div>
+
+      <div class="itemcard" id="decryptInfo" hidden></div>
+      <div class="appgate" id="appGate" hidden></div>
+
+      <label class="field-label" for="decryptPassword">Password</label>
+      <div class="pwrow">
+        <input type="password" id="decryptPassword" class="mono" autocomplete="off" spellcheck="false" placeholder="The password from the sender">
+        <button type="button" class="mini" id="decryptShow">SHOW</button>
+      </div>
+      <div class="actions"><button type="button" class="btn btn-gold" id="decryptBtn">Decrypt</button></div>
+      <div class="msg err" id="decryptErr"></div>
+      <div class="msg warn" id="decryptWarn"></div>
+      <div class="msg ok" id="decryptOk"></div>
+    </section>
+
+    <!-- ============================== RECOVER ============================== -->
+    <section class="panel" id="view-recover">
+      <div class="guest-note"><span>&#128273;</span><span><strong>Project owner only.</strong> Reveals the password of an encrypted item that had &ldquo;Allow owner recovery&rdquo; ticked. It needs the private recovery key file, which must stay offline and is never part of this site.</span></div>
+      <label class="field-label" for="recKey">Your private recovery key (.json)</label>
+      <input type="file" id="recKey" accept=".json,application/json">
+      <label class="field-label" for="recText">Paste encrypted text</label>
+      <textarea id="recText" class="mono" placeholder="Paste the encrypted text…"></textarea>
+      <div class="or">— OR —</div>
+      <label class="field-label">Choose the encrypted (.cenc) file</label>
+      <div class="dropzone" id="recDrop"><strong>Drop the encrypted file here, or click to choose</strong>The file whose password needs recovering.</div>
+      <input type="file" id="recFile" hidden>
+      <div class="chip" id="recChip" hidden><span class="nm" id="recChipName"></span><button type="button" id="recChipClear">remove</button></div>
+      <div class="actions"><button type="button" class="btn btn-gold" id="recBtn">Recover password</button></div>
+      <div class="msg err" id="recErr"></div>
+      <div class="msg ok" id="recOk"></div>
+      <div class="output" id="recOut" hidden>
+        <div class="outhead"><label class="field-label" for="recPw">Recovered password</label><button type="button" class="mini" id="recCopy">COPY</button></div>
+        <input type="text" id="recPw" class="mono" readonly>
+      </div>
+    </section>
+
+    <section class="seo-copy">
+      <h2>A zero-trust vault for academic records and private files</h2>
+      <p>CipherSeal Vault protects transcripts, result sheets, theses and personal messages with AES-256-GCM authenticated encryption. Keys are derived from a long random password with PBKDF2-HMAC-SHA-256 using a dynamic iteration count that rises with the sensitivity of the record. Every decryption is verified, wrong guesses are limited, and encrypted items can disappear after a timer or after a single view. It is free, needs no account, and runs entirely in your browser.</p>
+    </section>
+  </main>
+
+  <footer>
+    CipherSeal Vault — built by <span class="maker">Lukman Agbolade Alao</span><br>
+    Final year project · Department of Computer Science · Southwestern University, Nigeria
+  </footer>
+</div>
+
+<!-- Copy-your-password gate -->
+<div class="modal-bg" id="pwModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pwModalTitle">
+    <h2 id="pwModalTitle">Copy your password first</h2>
+    <p>This is the only time it is shown. Without it the sealed item cannot be opened. Copy it and keep it safe, and send it to the recipient separately from the sealed item.</p>
+    <div class="bigpw" id="pwModalValue"></div>
+    <div class="copystate" id="pwCopyState"></div>
+    <div class="actions">
+      <button type="button" class="btn btn-ghost" id="pwModalCopy">Copy password</button>
+      <button type="button" class="btn btn-gold" id="pwModalGo" disabled>I copied it — encrypt now</button>
+      <button type="button" class="btn btn-ghost" id="pwModalCancel">Cancel</button>
+    </div>
+    <p class="copystate" id="pwManualRow" hidden><button type="button" class="linkbtn" id="pwManualBtn">Copy did not work — I copied it by hand</button></p>
+  </div>
+</div>
+
+<!-- Viewer (opened items) -->
+<div class="viewer" id="viewer" hidden>
+  <div class="camera-gate" id="cameraGate" hidden>
+    <div class="camera-gate-card" role="dialog" aria-modal="true" aria-labelledby="cameraGateTitle">
+      <h2 id="cameraGateTitle">Camera guard required</h2>
+      <p>This is a protected item. Allow camera access and keep your face in view with no phone in sight. The camera is analyzed on this device only; no photos or video are recorded or uploaded. If a phone, a second person or a covered lens is detected, the content is hidden at once and the session ends.</p>
+      <video id="cameraPreview" muted autoplay playsinline aria-label="Local camera preview"></video>
+      <p class="camera-status" id="cameraStatus" role="status">Your camera stays off until you choose to enable it.</p>
+      <div class="actions">
+        <button type="button" class="btn btn-gold" id="cameraStart">Enable camera and continue</button>
+        <button type="button" class="btn btn-ghost" id="cameraCancel">Cancel</button>
+      </div>
+      <p class="camera-disclaimer">A strong deterrent, not a guarantee: it sees only what this camera sees, so a phone out of frame or a second camera elsewhere cannot be detected. Nothing in a browser can block OS screenshots or screen recording.</p>
+    </div>
+  </div>
+  <div class="viewer-card" role="dialog" aria-modal="true" aria-label="Decrypted item">
+    <div class="viewer-top">
+      <div class="viewer-badges" id="viewerBadges"></div>
+      <div class="guard-chip" id="guardChip" hidden><video id="guardThumb" muted autoplay playsinline aria-hidden="true"></video><span>Camera guard on</span></div>
+      <div class="ring" id="countdownRing" hidden>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ring-bg" cx="24" cy="24" r="20"></circle><circle class="ring-arc" id="countdownArc" cx="24" cy="24" r="20"></circle></svg>
+        <span id="countdownNum"></span>
+      </div>
+    </div>
+    <div class="viewer-body" id="viewerBody"></div>
+    <div class="viewer-foot" id="viewerFoot"></div>
+    <div class="viewer-note" id="viewerNote" role="status"></div>
+    <div class="viewer-actions"><button type="button" class="btn btn-ghost" id="viewerClose">Close</button></div>
+  </div>
+</div>
+
+<script src="js/crypto.js"></script>
+<script src="js/password.js"></script>
+<script src="js/guard.js"></script>
+<script src="js/config.js"></script>
+<script src="js/platform.js"></script>
+<script src="js/release.js"></script>
+<script src="js/camguard.js"></script>
+<script src="js/viewer.js"></script>
+<script src="js/padlock.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

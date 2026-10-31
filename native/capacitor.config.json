@@ -1,0 +1,20 @@
+{
+  "appId": "com.cipherseal.vault",
+  "appName": "CipherSeal Vault",
+  "webDir": "www",
+  "server": {
+    "url": "https://ndlapprenticeschool.com/CYPHER/",
+    "cleartext": false,
+    "allowNavigation": [
+      "ndlapprenticeschool.com"
+    ]
+  },
+  "android": {
+    "allowMixedContent": false,
+    "appendUserAgent": "CipherSealApp/1"
+  },
+  "ios": {
+    "appendUserAgent": "CipherSealApp/1",
+    "limitsNavigationsToAppBoundDomains": false
+  }
+}

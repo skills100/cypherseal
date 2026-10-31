@@ -1,0 +1,9 @@
+{
+  "name": "cipherseal-vault",
+  "version": "4.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8765 -t .",
+    "test": "node tests/core.test.js && node tests/camguard.test.js"
+  }
+}

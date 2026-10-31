@@ -1,0 +1,71 @@
+
+// ===================================================================================
+// CipherSeal secure viewing  (appended to AppDelegate.swift by setup-ios.sh)
+// ===================================================================================
+import WebKit
+
+/// Layer 1 (undocumented Apple behaviour): draw the app inside a secure text-field layer, which iOS
+/// excludes from screenshots and screen recordings, so they come out BLANK. If it ever causes a
+/// display problem on some iOS version, set this to false. Layer 2 below keeps working either way.
+let CS_USE_SECURE_LAYER = true
+
+/// Layer 2 (documented): detect recording / mirroring / screenshots, blank the web view, and tell the
+/// page (js/viewer.js -> CSNativeAlert) to end the session and wipe the content.
+class SecureViewController: CAPBridgeViewController {
+    private var tokens: [NSObjectProtocol] = []
+    private var secureApplied = false
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let nc = NotificationCenter.default
+        tokens.append(nc.addObserver(forName: UIScreen.capturedDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.captureChanged()
+        })
+        tokens.append(nc.addObserver(forName: UIApplication.userDidTakeScreenshotNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.notifyPage("screenshot")
+        })
+        // App-switcher snapshot and control-centre pulls: hide while inactive.
+        tokens.append(nc.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.webView?.isHidden = true
+        })
+        tokens.append(nc.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.captureChanged()
+        })
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if CS_USE_SECURE_LAYER && !secureApplied, let window = view.window {
+            secureApplied = true
+            window.csMakeSecure()
+        }
+        captureChanged()
+    }
+
+    private func captureChanged() {
+        let captured = UIScreen.main.isCaptured
+        webView?.isHidden = captured          // blank at once while recording or mirroring
+        webView?.evaluateJavaScript("window.CS_SCREEN_CAPTURED = \(captured ? "true" : "false");", completionHandler: nil)
+        if captured { notifyPage("recording") }
+    }
+
+    private func notifyPage(_ why: String) {
+        webView?.evaluateJavaScript("window.CSNativeAlert && window.CSNativeAlert('\(why)');", completionHandler: nil)
+    }
+}
+
+extension UIWindow {
+    func csMakeSecure() {
+        let field = UITextField()
+        field.isSecureTextEntry = true
+        field.isUserInteractionEnabled = false
+        field.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(field)
+        field.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        field.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        layer.superlayer?.addSublayer(field.layer)
+        let host: CALayer?
+        if #available(iOS 17.0, *) { host = field.layer.sublayers?.last } else { host = field.layer.sublayers?.first }
+        host?.addSublayer(layer)
+    }
+}

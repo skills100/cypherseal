@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CipherSeal Vault — Owner Recovery Key Generator (offline tool)</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  body{background:#0b0d16;color:#eef0f8;font:15px system-ui,sans-serif;max-width:720px;margin:40px auto;padding:0 20px;line-height:1.6}
+  h1{font-size:20px} textarea{width:100%;height:140px;background:#05060d;color:#f0cf5c;font:12.5px ui-monospace,monospace;border:1px solid #d4af37;border-radius:8px;padding:10px}
+  button{background:#d4af37;color:#1a1305;border:0;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;margin:8px 8px 0 0}
+  .warn{background:rgba(226,85,74,.15);border:1px solid #e2554a;padding:12px;border-radius:10px;margin:14px 0}
+  a{color:#35d0c0}
+</style>
+</head>
+<body>
+<h1>CipherSeal Vault — Owner Recovery Key Generator</h1>
+<p>Run this file <strong>locally and offline</strong> (double-click it, no server needed) to create your own RSA-OAEP 2048 key pair for the "Allow owner recovery" feature. It never sends anything anywhere — open the browser's Network tab if you want to confirm that yourself.</p>
+<div class="warn">Keep <code>recovery-private-key.json</code> somewhere safe and offline (a USB drive, not this repository). Only <code>recovery-public-key.json</code> goes into <code>data/</code> on the live site.</div>
+<button id="gen">Generate a new key pair</button>
+<p><strong>Public key</strong> — save as <code>data/recovery-public-key.json</code>:</p>
+<textarea id="pub" readonly></textarea>
+<button id="dlPub" disabled>Download public key JSON</button>
+<p><strong>Private key</strong> — save offline as <code>recovery-private-key.json</code>, never publish it:</p>
+<textarea id="priv" readonly></textarea>
+<button id="dlPriv" disabled>Download private key JSON</button>
+<script>
+  let pubJwk = null, privJwk = null;
+  function dl(name, obj) {
+    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+  document.getElementById('gen').addEventListener('click', async () => {
+    const kp = await crypto.subtle.generateKey(
+      { name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1,0,1]), hash: 'SHA-256' },
+      true, ['encrypt', 'decrypt']
+    );
+    pubJwk = await crypto.subtle.exportKey('jwk', kp.publicKey);
+    pubJwk.alg = 'RSA-OAEP-256'; pubJwk.key_ops = ['encrypt'];
+    privJwk = await crypto.subtle.exportKey('jwk', kp.privateKey);
+    document.getElementById('pub').value = JSON.stringify(pubJwk, null, 2);
+    document.getElementById('priv').value = JSON.stringify(privJwk, null, 2);
+    document.getElementById('dlPub').disabled = false;
+    document.getElementById('dlPriv').disabled = false;
+  });
+  document.getElementById('dlPub').addEventListener('click', () => dl('recovery-public-key.json', { _comment: 'Owner PUBLIC recovery key (RSA-OAEP 2048, SHA-256). Safe to publish.', ...pubJwk }));
+  document.getElementById('dlPriv').addEventListener('click', () => dl('recovery-private-key.json', privJwk));
+</script>
+</body>
+</html>

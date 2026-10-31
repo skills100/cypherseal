@@ -1,0 +1,11 @@
+.install{max-width:760px;margin:0 auto;padding:24px 18px 60px;line-height:1.55}
+.install h1{margin:.4em 0}
+.install section{margin:28px 0;padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
+.install section.here{border-color:#d4af37;background:rgba(212,175,55,.07)}
+.install h3{margin:18px 0 6px;font-size:16px}
+.install li{margin:6px 0}
+.install .note{color:#e8d58a;font-size:14px}
+.install .detected{color:#e8d58a}
+.install code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:5px}
+
+.btn-primary.disabled{opacity:.55;cursor:not-allowed}

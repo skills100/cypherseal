@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install the CipherSeal app</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/install.css">
+</head>
+<body>
+<main class="install">
+  <p><a href="index.html">&larr; Back to CipherSeal Vault</a></p>
+  <h1>Install the CipherSeal app</h1>
+  <p>Protected, view-once and self-destruct items open only in the CipherSeal app. The app makes screenshots and screen recordings come out blank, which a web browser cannot do. Ordinary encrypted items still open in any browser.</p>
+  <p class="detected" id="detected"></p>
+  <p class="note" id="teamStatus" hidden></p>
+
+  <section id="android">
+    <h2>Android</h2>
+    <p><a class="btn-primary appgate-btn" id="apkLink" href="downloads/CipherSeal.apk" download>Download CipherSeal.apk</a></p>
+    <p class="note" id="apkStatus" hidden></p>
+    <ol>
+      <li>Open the downloaded file (notification bar or the Downloads app).</li>
+      <li>Android may say your browser is not allowed to install apps. Tap <b>Settings</b> and switch on <b>Allow from this source</b>, then go back.</li>
+      <li>If Google Play Protect says <i>“App not scanned”</i> or warns about an unrecognised app, tap <b>More details</b>, then <b>Install anyway</b>. This is normal: the app is not on the Play Store yet.</li>
+      <li>Open CipherSeal, pick your encrypted file, enter the password, and allow the camera when asked.</li>
+    </ol>
+    <p class="note">You can switch “Allow from this source” off again afterwards.</p>
+  </section>
+
+  <section id="ios">
+    <h2>iPhone and iPad</h2>
+    <p>Apple does not allow installing apps from a web link unless the app is on the App Store or TestFlight. Until the project is published, the app is installed by the project team with one of these methods. All use a free Apple ID. <b>The app stops opening after 7 days and must be re-installed or refreshed</b>; this is an Apple rule for free accounts.</p>
+
+    <p>
+      <a class="btn-primary appgate-btn" id="altLink" href="#">Add to AltStore (iPhone, needs AltStore)</a>
+      <a class="btn-primary appgate-btn" id="ipaLink" href="downloads/CipherSeal.ipa" download>Download CipherSeal.ipa</a>
+    </p>
+    <p class="note" id="ipaStatus" hidden></p>
+    <p class="note" id="altStatus" hidden></p>
+
+    <h3>Method 1: Sideloadly (Windows or Mac, with a cable)</h3>
+    <ol>
+      <li>On the computer install Sideloadly from sideloadly.io (on a Mac: open the .dmg and drag it to Applications; on Windows also install iTunes and iCloud from Apple’s website, not the Microsoft Store versions).</li>
+      <li>Download <b>CipherSeal.ipa</b> with the button above, on the computer.</li>
+      <li>Plug the iPhone in by cable and tap <b>Trust</b> on the phone.</li>
+      <li>Drag the .ipa into Sideloadly, enter your Apple ID, press <b>Start</b>.</li>
+      <li>On the iPhone: <b>Settings &rarr; General &rarr; VPN &amp; Device Management</b>, tap your Apple ID, tap <b>Trust</b>.</li>
+      <li>iOS 16 or newer: <b>Settings &rarr; Privacy &amp; Security &rarr; Developer Mode</b>, switch on and restart.</li>
+      <li>Open CipherSeal.</li>
+    </ol>
+
+    <h3>Method 2: AltStore (refreshes itself over Wi-Fi)</h3>
+    <ol>
+      <li>On the computer install AltServer from altstore.io, then use it to install AltStore onto the iPhone with a cable (same Apple ID).</li>
+      <li>On the iPhone, open this page in Safari and tap <b>Add to AltStore</b> above. AltStore opens with the CipherSeal source; tap <b>Free</b> / <b>Install</b>.</li>
+      <li>Keep AltServer running on the same Wi-Fi so AltStore can renew the app every 7 days.</li>
+    </ol>
+
+    <h3>Method 3: Xcode (Mac only)</h3>
+    <ol>
+      <li>Run <code>./setup-ios.sh yourdomain.com</code> in the <code>native</code> folder, open <code>native/ios/App/App.xcworkspace</code>, choose your iPhone, set Signing &rarr; Team to your Apple ID and press Run.</li>
+    </ol>
+    <p class="note">After launch, with a paid Apple Developer account, this becomes a normal App Store or TestFlight install with no 7-day limit.</p>
+  </section>
+
+  <section id="desktop">
+    <h2>Computers</h2>
+    <p>There is no desktop app yet. Open protected items on an Android phone or iPhone with the app. Standard encrypted items open in any browser.</p>
+  </section>
+</main>
+<script src="js/config.js"></script>
+<script src="js/platform.js"></script>
+<script src="js/install.js"></script>
+</body>
+</html>

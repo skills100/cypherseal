@@ -1,0 +1,11 @@
+'use strict';
+const assert = require('assert'); const { detectPlatform: d } = require('../js/platform');
+let n = 0; const t = (name, fn) => { fn(); n++; console.log('  ok   ' + name); };
+t('Android Chrome', () => assert.strictEqual(d('Mozilla/5.0 (Linux; Android 14; Pixel 8) Chrome/120 Mobile Safari/537.36', 'Linux armv8l', 5), 'android'));
+t('iPhone Safari', () => assert.strictEqual(d('Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605 Safari/604', 'iPhone', 5), 'ios'));
+t('iPad in desktop mode (reports as Mac, has touch)', () => assert.strictEqual(d('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605 Safari/605', 'MacIntel', 5), 'ios'));
+t('real Mac has no touch -> desktop', () => assert.strictEqual(d('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605', 'MacIntel', 0), 'desktop'));
+t('Windows Chrome -> desktop', () => assert.strictEqual(d('Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120', 'Win32', 0), 'desktop'));
+t('Android wrapper (marker) -> app', () => assert.strictEqual(d('Mozilla/5.0 (Linux; Android 14) Chrome/120 Mobile CipherSealApp/1', 'Linux armv8l', 5), 'app'));
+t('iOS wrapper (marker) -> app', () => assert.strictEqual(d('Mozilla/5.0 (iPhone; CPU iPhone OS 17_2) AppleWebKit/605 CipherSealApp/1', 'iPhone', 5), 'app'));
+console.log('\n' + n + ' passed, 0 failed');

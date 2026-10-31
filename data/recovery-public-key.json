@@ -1,0 +1,11 @@
+{
+  "_comment": "Owner PUBLIC recovery key (RSA-OAEP 2048, SHA-256). Safe to publish. The matching private key must stay offline and is NEVER part of this site.",
+  "kty": "RSA",
+  "n": "wHI2p-_c8sgA47Q-hOwF5RugaojBjQ5GfsdQiEpep0TlSnd72HMelYfNd3vAeVc4s-GiCJ23d4DC73ID7r8CYaWiXH1Z50V76kXjaopLC29u7KWD30DK-wAL5-d7yiynCAOXTNAC8j-5bPk69Akoi6CIRg6ura8SeCTr4DtEvcqjv2nHyZ0flzAHTDcolaYBQpf0s1Up5Wb_49UZSdYYxQPV2tOTfIBqMJTTMB33TWYydRBjyQhwOks_R8NICx1tt80iXJIfgBfkTcy66fXwvubp4paTJGZFhN7B43_TkXYSWy7Toniqyv4Pq547nW-UnJ-p2R6bka76EIuj-5ZKJw",
+  "e": "AQAB",
+  "alg": "RSA-OAEP-256",
+  "ext": true,
+  "key_ops": [
+    "encrypt"
+  ]
+}

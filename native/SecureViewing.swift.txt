@@ -1,4 +1,3 @@
-
 // ===================================================================================
 // CipherSeal secure viewing  (appended to AppDelegate.swift by setup-ios.sh)
 // ===================================================================================
@@ -7,13 +6,14 @@ import WebKit
 /// Layer 1 (undocumented Apple behaviour): draw the app inside a secure text-field layer, which iOS
 /// excludes from screenshots and screen recordings, so they come out BLANK. If it ever causes a
 /// display problem on some iOS version, set this to false. Layer 2 below keeps working either way.
-let CS_USE_SECURE_LAYER = true
+let CS_USE_SECURE_LAYER = false
 
 /// Layer 2 (documented): detect recording / mirroring / screenshots, blank the web view, and tell the
 /// page (js/viewer.js -> CSNativeAlert) to end the session and wipe the content.
 class SecureViewController: CAPBridgeViewController {
     private var tokens: [NSObjectProtocol] = []
     private var secureApplied = false
+    private var secureField: UITextField?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,9 +37,15 @@ class SecureViewController: CAPBridgeViewController {
         super.viewDidAppear(animated)
         if CS_USE_SECURE_LAYER && !secureApplied, let window = view.window {
             secureApplied = true
-            window.csMakeSecure()
+            secureField = window.csMakeSecure()
         }
         captureChanged()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // keep the secure layer exactly the size of the window (rotation, split view), origin 0,0
+        if let w = view.window, let f = secureField, f.frame != w.bounds { f.frame = w.bounds }
     }
 
     private func captureChanged() {
@@ -55,17 +61,22 @@ class SecureViewController: CAPBridgeViewController {
 }
 
 extension UIWindow {
-    func csMakeSecure() {
-        let field = UITextField()
+    /// The secure field must be exactly the window's size with its origin at 0,0. (A small centred field
+    /// shifts everything drawn inside it by half the screen, which pushed the app off to the right/bottom.)
+    @discardableResult
+    func csMakeSecure() -> UITextField {
+        let field = UITextField(frame: bounds)
         field.isSecureTextEntry = true
         field.isUserInteractionEnabled = false
-        field.translatesAutoresizingMaskIntoConstraints = false
+        field.backgroundColor = .clear
+        field.borderStyle = .none
         addSubview(field)
-        field.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        field.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        field.layoutIfNeeded()
         layer.superlayer?.addSublayer(field.layer)
         let host: CALayer?
         if #available(iOS 17.0, *) { host = field.layer.sublayers?.last } else { host = field.layer.sublayers?.first }
+        host?.frame = field.bounds
         host?.addSublayer(layer)
+        return field
     }
 }

@@ -1,22 +1,43 @@
+
 // ===================================================================================
 // CipherSeal secure viewing  (appended to AppDelegate.swift by setup-ios.sh)
 // ===================================================================================
 import WebKit
 
-/// Layer 1 (undocumented Apple behaviour): draw the app inside a secure text-field layer, which iOS
-/// excludes from screenshots and screen recordings, so they come out BLANK. If it ever causes a
-/// display problem on some iOS version, set this to false. Layer 2 below keeps working either way.
-let CS_USE_SECURE_LAYER = false
+/// Layer 1 (undocumented Apple behaviour, best effort): while a PROTECTED item is open, draw the app inside
+/// a secure text-field layer, which iOS leaves out of screenshots and screen recordings (they come out blank).
+/// It is switched on by the page (js/native.js -> setSecure) only while the protected viewer is open and is
+/// removed again when the viewer closes, so ordinary screens are never touched. Apple does not document this,
+/// and it displaced the whole interface on iOS 26 when it was always on. If it causes any display problem,
+/// set this to false: Layer 2 below keeps working either way.
+let CS_USE_SECURE_LAYER = true
 
 /// Layer 2 (documented): detect recording / mirroring / screenshots, blank the web view, and tell the
 /// page (js/viewer.js -> CSNativeAlert) to end the session and wipe the content.
+final class CSMessageProxy: NSObject, WKScriptMessageHandler {
+    weak var owner: SecureViewController?
+    init(owner: SecureViewController) { self.owner = owner }
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == "csSecure" else { return }
+        var on = false
+        if let flag = message.body as? Bool { on = flag }
+        else if let number = message.body as? NSNumber { on = number.boolValue }
+        owner?.setSecure(on)
+    }
+}
+
+struct CSSecureHandle {
+    let field: UITextField
+    let originalSuper: CALayer
+}
+
 class SecureViewController: CAPBridgeViewController {
     private var tokens: [NSObjectProtocol] = []
-    private var secureApplied = false
-    private var secureField: UITextField?
+    private var secureHandle: CSSecureHandle?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        webView?.configuration.userContentController.add(CSMessageProxy(owner: self), name: "csSecure")
         let nc = NotificationCenter.default
         tokens.append(nc.addObserver(forName: UIScreen.capturedDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
             self?.captureChanged()
@@ -35,17 +56,24 @@ class SecureViewController: CAPBridgeViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if CS_USE_SECURE_LAYER && !secureApplied, let window = view.window {
-            secureApplied = true
-            secureField = window.csMakeSecure()
-        }
         captureChanged()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         // keep the secure layer exactly the size of the window (rotation, split view), origin 0,0
-        if let w = view.window, let f = secureField, f.frame != w.bounds { f.frame = w.bounds }
+        if let w = view.window, let h = secureHandle, h.field.frame != w.bounds { h.field.frame = w.bounds }
+    }
+
+    /// Called from the page when a protected item opens (true) or closes (false).
+    func setSecure(_ on: Bool) {
+        guard CS_USE_SECURE_LAYER, let window = view.window else { return }
+        if on && secureHandle == nil {
+            secureHandle = window.csMakeSecure()
+        } else if !on, let handle = secureHandle {
+            window.csRemoveSecure(handle)
+            secureHandle = nil
+        }
     }
 
     private func captureChanged() {
@@ -61,10 +89,10 @@ class SecureViewController: CAPBridgeViewController {
 }
 
 extension UIWindow {
-    /// The secure field must be exactly the window's size with its origin at 0,0. (A small centred field
-    /// shifts everything drawn inside it by half the screen, which pushed the app off to the right/bottom.)
-    @discardableResult
-    func csMakeSecure() -> UITextField {
+    /// The secure field is exactly the window's size with its origin at 0,0, and the layer iOS uses for secure
+    /// drawing is found by its class name, not by its position in the list (that order changes between iOS versions).
+    func csMakeSecure() -> CSSecureHandle? {
+        guard let sup = layer.superlayer else { return nil }
         let field = UITextField(frame: bounds)
         field.isSecureTextEntry = true
         field.isUserInteractionEnabled = false
@@ -72,11 +100,29 @@ extension UIWindow {
         field.borderStyle = .none
         addSubview(field)
         field.layoutIfNeeded()
-        layer.superlayer?.addSublayer(field.layer)
-        let host: CALayer?
-        if #available(iOS 17.0, *) { host = field.layer.sublayers?.last } else { host = field.layer.sublayers?.first }
-        host?.frame = field.bounds
-        host?.addSublayer(layer)
-        return field
+        var host: CALayer? = nil
+        for candidate in field.layer.sublayers ?? [] {
+            if let owner = candidate.delegate as? UIView, String(describing: type(of: owner)).contains("CanvasView") {
+                host = candidate
+                break
+            }
+        }
+        if host == nil {
+            if #available(iOS 17.0, *) { host = field.layer.sublayers?.last } else { host = field.layer.sublayers?.first }
+        }
+        guard let target = host else {
+            field.removeFromSuperview()
+            return nil
+        }
+        sup.addSublayer(field.layer)
+        target.frame = field.bounds
+        target.addSublayer(layer)
+        return CSSecureHandle(field: field, originalSuper: sup)
+    }
+
+    func csRemoveSecure(_ handle: CSSecureHandle) {
+        handle.originalSuper.addSublayer(layer)
+        handle.field.layer.removeFromSuperlayer()
+        handle.field.removeFromSuperview()
     }
 }

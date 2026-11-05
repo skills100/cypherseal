@@ -300,7 +300,7 @@
     if (!session) return;
     if (!session.destroyed) destroy('Closed. The contents have been wiped from memory.');
     $('viewer').hidden = true;
-    document.body.classList.remove('viewer-open');
+    document.body.classList.remove('viewer-open'); if (global.CSNative) global.CSNative.setSecure(false);
     session = null;
   }
 
@@ -323,7 +323,7 @@
     $('viewerBody').textContent = '';
     $('viewer').hidden = false;
     $('viewerClose').textContent = 'Close';
-    document.body.classList.add('viewer-open');
+    document.body.classList.add('viewer-open'); if (global.CSNative) global.CSNative.setSecure(true);
     if (!await startCameraGate(s)) { close(); return false; }
     s.gated = true;
     return !s.destroyed;
@@ -341,7 +341,7 @@
       $('viewerBody').textContent = '';
       $('viewer').hidden = false;
       $('viewerClose').textContent = 'Close';
-      document.body.classList.add('viewer-open');
+      document.body.classList.add('viewer-open'); if (global.CSNative) global.CSNative.setSecure(true);
       if (needsCamera && !await startCameraGate(s)) { close(); return false; }
       s.gated = true;
     }
@@ -415,6 +415,8 @@
         const sz = document.createElement('div'); sz.className = 'vfile-size'; sz.textContent = fmtSize(meta.file.len);
         info.append(nm, sz);
         const a = document.createElement('a'); a.className = 'btn btn-gold'; a.href = url; a.download = meta.file.name; a.id = 'viewerDownload'; a.textContent = 'Download';
+        // In the app a blob link cannot download, so use the share sheet instead.
+        a.addEventListener('click', ev => { if (global.CSNative && global.CSNative.inApp()) { ev.preventDefault(); global.CSNative.saveBytes(meta.file.name, opts.fileBytes, meta.file.type); } });
         card.append(info, a);
         body.appendChild(card);
       }

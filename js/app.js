@@ -264,11 +264,11 @@
     $('encryptOut').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
   $('encryptCopy').addEventListener('click', async () => flashButton($('encryptCopy'), (await copyText($('encryptedText').value)) ? 'COPIED' : 'FAILED'));
-  $('encryptDownload').addEventListener('click', () => {
+  $('encryptDownload').addEventListener('click', async () => {
     if (!state.encryptedBytes) return;
-    const url = URL.createObjectURL(new Blob([state.encryptedBytes], { type: 'application/octet-stream' }));
-    const a = document.createElement('a'); a.href = url; a.download = state.encryptedName; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    // In the Android / iPhone app this opens the share sheet ("Save to Files"); in a browser it downloads.
+    try { await CSNative.saveBytes(state.encryptedName, state.encryptedBytes, 'application/octet-stream'); }
+    catch (e) { show($('encryptErr'), 'The file could not be saved: ' + (e && e.message ? e.message : e)); }
   });
 
   // ------------------------------------------------------------ decrypt tab

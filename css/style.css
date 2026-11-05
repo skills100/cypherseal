@@ -403,3 +403,9 @@ footer .maker { color: var(--gold-bright); }
   padding-left: max(14px, env(safe-area-inset-left, 0px));
 }
 @media (max-width: 380px) { .wrap { padding-left: 14px; padding-right: 14px; } }
+
+/* install buttons: the .btn-primary links were unstyled (default blue on a dark page) */
+.btn-primary { display: inline-block; color: #1a1305 !important; background: linear-gradient(135deg, var(--gold-bright), var(--gold)); border-radius: 11px; padding: 11px 18px; font-weight: 700; text-decoration: none; box-shadow: 0 12px 26px -10px rgba(212, 175, 55, 0.7); }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-primary.disabled { opacity: 0.55; cursor: not-allowed; }
+.appgate-more { color: var(--gold-bright); }
